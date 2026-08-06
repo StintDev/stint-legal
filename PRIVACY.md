@@ -110,7 +110,7 @@ friends-only visibility, no public profile, and no way for a stranger to see
 anything about them.
 
 If you are a parent or guardian and want your child's data removed, contact us
-using the support address on our App Store listing and we will delete the
+using contact@2finellc.com and we will delete the
 account.
 
 ## Changes

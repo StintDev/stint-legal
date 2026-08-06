@@ -90,4 +90,4 @@ new terms.
 
 ## Contact
 
-Use the support address on our App Store listing.
+Use contact@2finellc.com.
