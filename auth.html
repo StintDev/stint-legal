@@ -40,19 +40,24 @@
 </div>
 <script>
 (function () {
+  // Injected at build time from .env. The anon key is public by design; RLS is
+  // what protects data, not this key's secrecy.
+  var SUPABASE_URL = 'https://gmiqwdumepyttcpdpmpa.supabase.co';
+  var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtaXF3ZHVtZXB5dHRjcGRwbXBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NjA0ODgsImV4cCI6MjA5NTIzNjQ4OH0.btxL9nBDlcYssqcfRscjeBHO9QB8KQm2beuCe2Gmgvk';
+
   var hash = window.location.hash || '';
   var p = new URLSearchParams(hash.replace(/^#/, ''));
-  // PKCE puts its code in the query instead, so read both.
   var q = new URLSearchParams(window.location.search);
   var get = function (k) { return p.get(k) || q.get(k); };
 
   var type = get('type');
+  var tokenHash = get('token_hash');
   var failed = get('error') || get('error_code') || get('error_description');
   var hasSession = (get('access_token') && get('refresh_token')) || get('code');
   var onPhone = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  // Everything after the scheme, handed on exactly as it arrived.
-  var payload = hash || (window.location.search || '');
-  var deepLink = 'stint://auth-callback' + payload;
+  // Hand the app exactly what arrived — query for token hashes, fragment for
+  // the older session-in-URL links still in circulation.
+  var deepLink = 'stint://auth-callback' + (tokenHash ? window.location.search : hash);
 
   var out = document.getElementById('out');
   var show = function (title, body, button) {
@@ -60,16 +65,55 @@
       '<h1>' + title + '</h1><p>' + body + '</p>' +
       (button ? '<a class="btn" href="' + deepLink + '">Open Stint</a>' : '');
   };
-
-  if (failed) {
+  var expired = function () {
     show('That link has expired',
          'Links last an hour and work once. Open Stint and ask for a new one.');
+  };
+
+  if (failed) { expired(); return; }
+
+  // ── Token-hash links: what the mails send now ────────────────────────────
+  // Nothing has been spent yet when this page loads; the token is only used
+  // when someone verifies it. That is the whole advantage over the old links,
+  // which Supabase consumed before this page ever saw them.
+  if (tokenHash) {
+    if (onPhone) {
+      show('Opening Stint…', 'If nothing happens, tap the button.', true);
+      window.location.replace(deepLink);
+      return;
+    }
+    if (type === 'recovery' || type === 'magiclink') {
+      // Deliberately NOT verified here. A session on this computer is no use
+      // for a phone app, and leaving the token unspent means this exact mail
+      // still works when opened on the phone.
+      show('Open this email on your phone',
+           'This link still works. Open the same email on the phone with Stint ' +
+           'installed and tap it there.');
+      return;
+    }
+    // signup, email_change, invite, email: confirming the address is the
+    // whole job, and it can be done right here.
+    show('Confirming…', 'One moment.');
+    fetch(SUPABASE_URL + '/auth/v1/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON },
+      body: JSON.stringify({ type: type, token_hash: tokenHash })
+    }).then(function (res) {
+      if (!res.ok) { expired(); return; }
+      show(type === 'email_change' ? 'Email updated' : 'Email confirmed',
+           'You are all set. Open Stint on your phone and sign in.');
+      out.insertAdjacentHTML('beforeend',
+        '<p class="quiet">Nothing else to do on this computer.</p>');
+    }).catch(function () {
+      show('Could not reach Stint',
+           'Check your connection and open the link again. It has not been used up.');
+    });
     return;
   }
 
+  // ── Session-in-URL links: older mails, still honoured ────────────────────
   if (!hasSession) {
-    show('Nothing to do here',
-         'Open this page from a link in a Stint email.');
+    show('Nothing to do here', 'Open this page from a link in a Stint email.');
     return;
   }
 
@@ -80,16 +124,13 @@
   }
 
   if (type === 'recovery') {
-    // Cannot be completed on a desktop: the token is spent and the session is
-    // in a fragment that cannot reach the phone.
     show('Finish this on your phone',
          'Password resets have to be done on the device running Stint. ' +
          'Open Stint, tap Forgot password again, then open that email on your phone.');
     return;
   }
 
-  show('Email confirmed',
-       'You are all set. Open Stint on your phone and sign in.');
+  show('Email confirmed', 'You are all set. Open Stint on your phone and sign in.');
   out.insertAdjacentHTML('beforeend',
     '<p class="quiet">Nothing else to do on this computer.</p>');
 })();

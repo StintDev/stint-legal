@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+<!-- Unconditional, for every account regardless of age or settings. These pages
+     are shared person-to-person and carry a real person's name; they have no
+     business in a search index. robots.txt disallows the path as well. -->
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex" />
+<!-- No referrer, so the destination of any outbound tap never learns which
+     invite token the visitor came from. -->
+<meta name="referrer" content="no-referrer" />
+
+<title>Study with me on Stint</title>
+
+<!-- Deliberately generic. Link previews in iMessage and WhatsApp are generated
+     by a crawler that never runs our JavaScript, so nothing personal can leak
+     into an unfurl even in principle. -->
+<meta property="og:title" content="Study with me on Stint" />
+<meta property="og:description" content="Every session lights a star. Build your own sky." />
+<meta property="og:type" content="website" />
+
+<style>
+  :root {
+    --bg: #0A0A0D;
+    --text: #FFFFFF;
+    --muted: #A8A8B0;
+    --primary: #FF7A1A;
+    --streak: #FFB061;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    min-height: 100dvh;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 40px 24px 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase;
+  }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; margin: 0; line-height: 1.2; }
+  .lede { font-size: 16px; line-height: 1.5; color: var(--muted); margin: 0; max-width: 34ch; }
+  #sky { width: 100%; max-width: 420px; aspect-ratio: 3 / 4; display: block; }
+  .stats { display: flex; gap: 32px; justify-content: center; }
+  .stat-value { font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .cta {
+    display: inline-block; width: 100%; max-width: 320px;
+    background: var(--primary); color: #fff; text-decoration: none;
+    font-size: 17px; font-weight: 600;
+    padding: 16px 24px; border-radius: 14px;
+  }
+  .fine { font-size: 12px; color: var(--muted); margin: 0; max-width: 36ch; line-height: 1.5; }
+  .wordmark { font-size: 15px; font-weight: 700; letter-spacing: 1px; color: var(--text); }
+  @media (prefers-reduced-motion: no-preference) {
+    #sky circle { animation: twinkle 4s ease-in-out infinite; }
+    @keyframes twinkle { 0%,100% { opacity: 1; } 50% { opacity: .82; } }
+  }
+</style>
+</head>
+<body>
+<main id="root">
+  <div class="eyebrow">Stint</div>
+  <h1 id="headline">Loading…</h1>
+</main>
+
+<script>
+(function () {
+  // Must match STAR_HUES in theme/colors.ts. The payload stores an index into
+  // this array, never a subject name.
+  var HUES = ['#A8C8FF','#EAF2FF','#9FD8FF','#FFD79A','#FFA85C','#FF8A8A','#8AA9FF','#7FE3D4'];
+
+  var APP_STORE_URL = 'https://apps.apple.com/app/id0000000000';
+
+  // Injected at deploy time. The anon key is safe to publish — it carries no
+  // privileges beyond the RLS policies, and the only table readable without a
+  // session is invite_previews, whose every column is public by design.
+  var SUPABASE_URL = 'https://gmiqwdumepyttcpdpmpa.supabase.co';
+  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtaXF3ZHVtZXB5dHRjcGRwbXBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NjA0ODgsImV4cCI6MjA5NTIzNjQ4OH0.btxL9nBDlcYssqcfRscjeBHO9QB8KQm2beuCe2Gmgvk';
+
+  function tokenFromHash() {
+    var m = /#\/i\/([0-9a-f-]{36})/i.exec(window.location.hash || '');
+    return m ? m[1] : null;
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+    });
+  }
+
+  function skySvg(stars) {
+    if (!stars || !stars.length) return '';
+    var W = 300, H = 400;
+    var parts = ['<svg id="sky" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" aria-label="A constellation of study sessions">'];
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var x = Math.max(0, Math.min(1, +s.x || 0)) * W;
+      var y = Math.max(0, Math.min(1, +s.y || 0)) * H;
+      var intensity = Math.max(0, Math.min(1, +s.i || 0));
+      var hue = HUES[(+s.h | 0) % HUES.length] || HUES[0];
+      var r = 1.1 + intensity * 2.3;
+      // Halo then core, matching the app's two-layer star.
+      parts.push('<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(r*3.4).toFixed(1)+'" fill="'+hue+'" opacity="'+(0.10+intensity*0.14).toFixed(2)+'"/>');
+      parts.push('<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+r.toFixed(1)+'" fill="'+hue+'" opacity="'+(0.55+intensity*0.45).toFixed(2)+'" style="animation-delay:'+((i%7)*0.4).toFixed(1)+'s"/>');
+    }
+    parts.push('</svg>');
+    return parts.join('');
+  }
+
+  function renderGeneric() {
+    document.getElementById('root').innerHTML =
+      '<div class="eyebrow">You\'ve been invited</div>' +
+      '<h1>Study with me on Stint</h1>' +
+      '<p class="lede">Every focused session lights a star. Keep showing up and they become constellations.</p>' +
+      '<a class="cta" href="' + APP_STORE_URL + '">Get Stint</a>' +
+      '<p class="fine">Sessions are friends-only by default. Nothing you study is ever public.</p>';
+  }
+
+  function renderPreview(p) {
+    var name = esc(p.display_name || 'A Stint user');
+    var months = +p.months_active || 0;
+    var monthLine = months > 0
+      ? name + ' has been studying with Stint for ' + months + ' month' + (months === 1 ? '' : 's') + '.'
+      : name + ' just started their sky.';
+    document.getElementById('root').innerHTML =
+      '<div class="eyebrow">' + name + '\'s sky</div>' +
+      skySvg(p.stars) +
+      '<div class="stats">' +
+        '<div><div class="stat-value">' + (+p.total_hours || 0) + '</div><div class="stat-label">hours focused</div></div>' +
+        (months > 0 ? '<div><div class="stat-value">' + months + '</div><div class="stat-label">months</div></div>' : '') +
+      '</div>' +
+      '<h1>' + monthLine + '</h1>' +
+      '<p class="lede">Start your own sky.</p>' +
+      '<a class="cta" href="' + APP_STORE_URL + '">Get Stint</a>' +
+      '<p class="fine">Sessions are friends-only by default. Nothing you study is ever public.</p>' +
+      '<div class="wordmark">Stint</div>';
+  }
+
+  var token = tokenFromHash();
+  if (!token || SUPABASE_URL.indexOf('__') === 0) { renderGeneric(); return; }
+
+  // An RPC, not a table read. The table is not exposed to anonymous callers at
+  // all (migration 0017): this function requires the token as an argument, so
+  // there is no query shape that returns anything beyond the single row whose
+  // address the visitor already had. A table policy of `using (true)` would
+  // have let anyone with the anon key list every opted-in user.
+  //
+  // A missing row is the normal case, not an error: it means that person
+  // hasn't opted in, and the generic invite is the correct result.
+  fetch(SUPABASE_URL + '/rest/v1/rpc/get_invite_preview', {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ p_token: token }),
+  })
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(function (rows) {
+      if (rows && rows.length) renderPreview(rows[0]); else renderGeneric();
+    })
+    .catch(renderGeneric);
+
+  window.addEventListener('hashchange', function () { window.location.reload(); });
+})();
+</script>
+</body>
+</html>
