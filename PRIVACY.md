@@ -81,8 +81,16 @@ anything identifying you. We do not store the conversation — we keep only a
 timestamp per request, to enforce a daily limit. **If you never open the coach,
 nothing is ever sent to Anthropic.**
 
-**Apple** processes subscription payments through the App Store. We never see
-or store your payment details.
+**Apple** processes subscription payments through the App Store, and Sign in
+with Apple if you use it. We never see or store your payment details.
+
+**Google** handles Sign in with Google, if you choose it. Google tells us your
+email address and confirms it is yours; we receive nothing else from your
+Google account.
+
+**Resend** sends our account emails — confirming your address, resetting your
+password, confirming a change of email. It receives your email address and the
+text of that message, and nothing about your study activity.
 
 **Expo** delivers push notifications. It receives the push token for your
 device and the text of the notification itself — which is never more than a
