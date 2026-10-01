@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="referrer" content="no-referrer" />
+<title>Stint</title>
+<style>
+  :root { color-scheme: dark light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center;
+    justify-content: center; padding: 24px;
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0A0A0D; color: #FFFFFF; text-align: center;
+  }
+  .card { max-width: 420px; }
+  .brand { font-weight: 700; letter-spacing: 1.5px; font-size: 12px; color: #FF7A1A; margin-bottom: 28px; }
+  h1 { font-size: 26px; letter-spacing: -0.5px; margin: 0 0 10px; }
+  p { color: #A8A8B0; margin: 0 0 18px; }
+  a.btn {
+    display: inline-block; background: #FF7A1A; color: #0A0A0D;
+    font-weight: 700; text-decoration: none; padding: 13px 26px; border-radius: 999px;
+  }
+  .quiet { font-size: 13px; color: #8E8E99; }
+  @media (prefers-color-scheme: light) {
+    body { background: #FAF9F6; color: #16161A; }
+    p { color: #3C3C46; }
+    a.btn { background: #B4470B; color: #FFFFFF; }
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="brand">STINT</div>
+  <div id="out">
+    <h1>One moment…</h1>
+  </div>
+</div>
+<script>
+(function () {
+  var hash = window.location.hash || '';
+  var p = new URLSearchParams(hash.replace(/^#/, ''));
+  // PKCE puts its code in the query instead, so read both.
+  var q = new URLSearchParams(window.location.search);
+  var get = function (k) { return p.get(k) || q.get(k); };
+
+  var type = get('type');
+  var failed = get('error') || get('error_code') || get('error_description');
+  var hasSession = (get('access_token') && get('refresh_token')) || get('code');
+  var onPhone = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  // Everything after the scheme, handed on exactly as it arrived.
+  var payload = hash || (window.location.search || '');
+  var deepLink = 'stint://auth-callback' + payload;
+
+  var out = document.getElementById('out');
+  var show = function (title, body, button) {
+    out.innerHTML =
+      '<h1>' + title + '</h1><p>' + body + '</p>' +
+      (button ? '<a class="btn" href="' + deepLink + '">Open Stint</a>' : '');
+  };
+
+  if (failed) {
+    show('That link has expired',
+         'Links last an hour and work once. Open Stint and ask for a new one.');
+    return;
+  }
+
+  if (!hasSession) {
+    show('Nothing to do here',
+         'Open this page from a link in a Stint email.');
+    return;
+  }
+
+  if (onPhone) {
+    show('Opening Stint…', 'If nothing happens, tap the button.', true);
+    window.location.replace(deepLink);
+    return;
+  }
+
+  if (type === 'recovery') {
+    // Cannot be completed on a desktop: the token is spent and the session is
+    // in a fragment that cannot reach the phone.
+    show('Finish this on your phone',
+         'Password resets have to be done on the device running Stint. ' +
+         'Open Stint, tap Forgot password again, then open that email on your phone.');
+    return;
+  }
+
+  show('Email confirmed',
+       'You are all set. Open Stint on your phone and sign in.');
+  out.insertAdjacentHTML('beforeend',
+    '<p class="quiet">Nothing else to do on this computer.</p>');
+})();
+</script>
+</body>
+</html>

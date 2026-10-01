@@ -1,6 +1,6 @@
 # Stint Privacy Policy
 
-_Last updated: 6 August 2026_
+_Last updated: 28 September 2026_
 
 Stint is a study-session tracker with a social layer. We collect the minimum
 data needed to run it, and nothing else. There are no ads, no analytics SDKs,
@@ -42,8 +42,10 @@ Keychain and are removed when you delete the app.
 ## What we never collect
 
 - Precise location. No GPS, ever.
-- Your contacts, photos, microphone, or camera. The app requests no such
-  permission.
+- Your contacts, microphone, or camera. The app requests no such permission.
+- Your photos. Choosing a profile picture does ask for photo-library access,
+  but the picture you pick is saved on your own device and is never uploaded
+  to us or shown to anyone else.
 - Analytics or advertising identifiers. No ad networks, no third-party
   trackers, no cross-app tracking.
 - Your date of birth.
@@ -76,6 +78,10 @@ nothing is ever sent to Anthropic.**
 **Apple** processes subscription payments through the App Store. We never see
 or store your payment details.
 
+**RevenueCat** tells us whether your subscription is active. It receives an
+anonymous identifier for your account and the receipt Apple issues; it does
+not receive your email address, your name, or any of your study data.
+
 We do not sell your data, and we do not share it with anyone for advertising.
 
 ## Where it lives and how it's protected
@@ -94,8 +100,7 @@ transit. Your sign-in tokens are stored in the iOS Keychain on your device.
   friendships, invites, groups, squads, scheduled sessions, streak twins,
   reports and blocks. It cannot be undone. Copies may persist briefly in our
   database provider's routine backups before those rotate out.
-- **Ask us anything** about your data using the support contact on our App
-  Store listing.
+- **Ask us anything** about your data at contact@2finellc.com.
 
 Depending on where you live you may have additional rights over your personal
 data. Contact us and we will honour them.
@@ -110,8 +115,7 @@ friends-only visibility, no public profile, and no way for a stranger to see
 anything about them.
 
 If you are a parent or guardian and want your child's data removed, contact us
-using contact@2finellc.com and we will delete the
-account.
+at contact@2finellc.com and we will delete the account.
 
 ## Changes
 

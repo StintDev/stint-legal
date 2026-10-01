@@ -90,4 +90,4 @@ new terms.
 
 ## Contact
 
-Use contact@2finellc.com.
+contact@2finellc.com.
