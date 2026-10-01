@@ -42,7 +42,7 @@
   <div class="brand">STINT</div>
   <nav class="nav"><a href="./">Home</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a></nav>
 <h1>Stint Privacy Policy</h1>
-<p><em>Last updated: 28 September 2026</em></p>
+<p><em>Last updated: 1 October 2026</em></p>
 <p>Stint is a study-session tracker with a social layer. We collect the minimum data needed to run it, and nothing else. There are no ads, no analytics SDKs, and no advertising identifiers.</p>
 <p>Most of our users are teenagers. That shapes everything below: defaults are private, sharing is opt-in, and we do not build profiles of you for anyone else's benefit.</p>
 <h2>What we collect</h2>
@@ -58,6 +58,11 @@
 <li>Subjects you create.</li>
 <li>Plans and reflections you write yourself: daily intentions, weekly goals, and post-session focus ratings with optional short notes.</li>
 <li>Semester chapters, exam dates and subjects, and break periods you set.</li>
+</ul>
+<p><strong>Notifications</strong></p>
+<ul>
+<li>A push token for each device you turn notifications on for, so we can reach that device. It identifies the install, not you, and it is deleted when you sign out, turn notifications off, or delete your account.</li>
+<li>Which kinds of notification you have agreed to.</li>
 </ul>
 <p><strong>Social</strong></p>
 <ul>
@@ -88,6 +93,7 @@
 <p><strong>Supabase</strong> hosts our database, authentication and server functions. Your account and activity are stored there, protected by row-level security rules that deny access by default.</p>
 <p><strong>Anthropic</strong> processes the AI study coach, which is an optional paid feature. If you use it, we send your messages in that conversation together with a summary of your recent sessions, focus ratings, goals and daily intentions, so the coach can answer usefully. We do not send your email address, your name, or anything identifying you. We do not store the conversation — we keep only a timestamp per request, to enforce a daily limit. <strong>If you never open the coach, nothing is ever sent to Anthropic.</strong></p>
 <p><strong>Apple</strong> processes subscription payments through the App Store. We never see or store your payment details.</p>
+<p><strong>Expo</strong> delivers push notifications. It receives the push token for your device and the text of the notification itself — which is never more than a friend's display name and a fixed phrase. It is not told who you are.</p>
 <p><strong>RevenueCat</strong> tells us whether your subscription is active. It receives an anonymous identifier for your account and the receipt Apple issues; it does not receive your email address, your name, or any of your study data.</p>
 <p>We do not sell your data, and we do not share it with anyone for advertising.</p>
 <h2>Where it lives and how it's protected</h2>

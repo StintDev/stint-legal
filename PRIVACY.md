@@ -1,6 +1,6 @@
 # Stint Privacy Policy
 
-_Last updated: 28 September 2026_
+_Last updated: 1 October 2026_
 
 Stint is a study-session tracker with a social layer. We collect the minimum
 data needed to run it, and nothing else. There are no ads, no analytics SDKs,
@@ -25,6 +25,12 @@ else's benefit.
 - Plans and reflections you write yourself: daily intentions, weekly goals, and
   post-session focus ratings with optional short notes.
 - Semester chapters, exam dates and subjects, and break periods you set.
+
+**Notifications**
+- A push token for each device you turn notifications on for, so we can reach
+  that device. It identifies the install, not you, and it is deleted when you
+  sign out, turn notifications off, or delete your account.
+- Which kinds of notification you have agreed to.
 
 **Social**
 - Friendships and friend requests, and invite links you create.
@@ -77,6 +83,10 @@ nothing is ever sent to Anthropic.**
 
 **Apple** processes subscription payments through the App Store. We never see
 or store your payment details.
+
+**Expo** delivers push notifications. It receives the push token for your
+device and the text of the notification itself — which is never more than a
+friend's display name and a fixed phrase. It is not told who you are.
 
 **RevenueCat** tells us whether your subscription is active. It receives an
 anonymous identifier for your account and the receipt Apple issues; it does
