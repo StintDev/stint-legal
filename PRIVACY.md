@@ -1,6 +1,6 @@
 # Stint Privacy Policy
 
-_Last updated: 1 October 2026_
+_Last updated: 4 October 2026_
 
 Stint is a study-session tracker with a social layer. We collect the minimum
 data needed to run it, and nothing else. There are no ads, no analytics SDKs,
@@ -14,6 +14,9 @@ else's benefit.
 
 **Account**
 - Your email address, for sign-in and verification.
+- Your phone number, only if you choose to add one, confirmed by a texted code.
+  It is used for one thing: letting friends who have it saved find you. It is
+  never shown to anyone and never used for marketing.
 - A username and display name you choose.
 - Whether you are under 18 — a yes/no flag derived at sign-up. We do not store
   your date of birth.
@@ -48,7 +51,13 @@ Keychain and are removed when you delete the app.
 ## What we never collect
 
 - Precise location. No GPS, ever.
-- Your contacts, microphone, or camera. The app requests no such permission.
+- Your contacts. If you tap Find friends from contacts, Stint asks for access
+  and, on your phone, turns each email address and phone number into a
+  scrambled code. Only those codes are sent, only to check which belong to
+  Stint accounts, and none are kept — we learn which of your contacts are
+  already on Stint and nothing about anyone else. Names are never sent. We
+  never message your contacts.
+- Your microphone or camera. The app requests no such permission.
 - Your photos. Choosing a profile picture does ask for photo-library access,
   but the picture you pick is saved on your own device and is never uploaded
   to us or shown to anyone else.
@@ -58,6 +67,10 @@ Keychain and are removed when you delete the app.
 
 ## Who can see your data
 
+- **People who have your email address or phone number saved** can see that you are on
+  Stint (your username and display name only) when they use Find friends from
+  contacts. Turn this off any time in Settings → Account → Let contacts find
+  me.
 - **Your sessions and stats are visible only to friends whose requests you have
   accepted.** Nothing about you is public. There are no public profiles.
 - Someone searching your username sees only your username, display name and
@@ -87,6 +100,9 @@ with Apple if you use it. We never see or store your payment details.
 **Google** handles Sign in with Google, if you choose it. Google tells us your
 email address and confirms it is yours; we receive nothing else from your
 Google account.
+
+**Twilio** sends the text message with the code that confirms your phone
+number, if you add one. It receives your number and that code, nothing else.
 
 **Resend** sends our account emails — confirming your address, resetting your
 password, confirming a change of email. It receives your email address and the

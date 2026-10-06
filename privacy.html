@@ -42,13 +42,14 @@
   <div class="brand">STINT</div>
   <nav class="nav"><a href="./">Home</a><a href="./privacy.html">Privacy</a><a href="./terms.html">Terms</a></nav>
 <h1>Stint Privacy Policy</h1>
-<p><em>Last updated: 1 October 2026</em></p>
+<p><em>Last updated: 4 October 2026</em></p>
 <p>Stint is a study-session tracker with a social layer. We collect the minimum data needed to run it, and nothing else. There are no ads, no analytics SDKs, and no advertising identifiers.</p>
 <p>Most of our users are teenagers. That shapes everything below: defaults are private, sharing is opt-in, and we do not build profiles of you for anyone else's benefit.</p>
 <h2>What we collect</h2>
 <p><strong>Account</strong></p>
 <ul>
 <li>Your email address, for sign-in and verification.</li>
+<li>Your phone number, only if you choose to add one, confirmed by a texted code. It is used for one thing: letting friends who have it saved find you. It is never shown to anyone and never used for marketing.</li>
 <li>A username and display name you choose.</li>
 <li>Whether you are under 18 — a yes/no flag derived at sign-up. We do not store your date of birth.</li>
 </ul>
@@ -76,13 +77,15 @@
 <h2>What we never collect</h2>
 <ul>
 <li>Precise location. No GPS, ever.</li>
-<li>Your contacts, microphone, or camera. The app requests no such permission.</li>
+<li>Your contacts. If you tap Find friends from contacts, Stint asks for access and, on your phone, turns each email address and phone number into a scrambled code. Only those codes are sent, only to check which belong to Stint accounts, and none are kept — we learn which of your contacts are already on Stint and nothing about anyone else. Names are never sent. We never message your contacts.</li>
+<li>Your microphone or camera. The app requests no such permission.</li>
 <li>Your photos. Choosing a profile picture does ask for photo-library access, but the picture you pick is saved on your own device and is never uploaded to us or shown to anyone else.</li>
 <li>Analytics or advertising identifiers. No ad networks, no third-party trackers, no cross-app tracking.</li>
 <li>Your date of birth.</li>
 </ul>
 <h2>Who can see your data</h2>
 <ul>
+<li><strong>People who have your email address or phone number saved</strong> can see that you are on Stint (your username and display name only) when they use Find friends from contacts. Turn this off any time in Settings → Account → Let contacts find me.</li>
 <li><strong>Your sessions and stats are visible only to friends whose requests you have accepted.</strong> Nothing about you is public. There are no public profiles.</li>
 <li>Someone searching your username sees only your username, display name and avatar — nothing else — until you accept them.</li>
 <li>Group and squad members see the hours you contribute to shared targets.</li>
@@ -94,6 +97,7 @@
 <p><strong>Anthropic</strong> processes the AI study coach, which is an optional paid feature. If you use it, we send your messages in that conversation together with a summary of your recent sessions, focus ratings, goals and daily intentions, so the coach can answer usefully. We do not send your email address, your name, or anything identifying you. We do not store the conversation — we keep only a timestamp per request, to enforce a daily limit. <strong>If you never open the coach, nothing is ever sent to Anthropic.</strong></p>
 <p><strong>Apple</strong> processes subscription payments through the App Store, and Sign in with Apple if you use it. We never see or store your payment details.</p>
 <p><strong>Google</strong> handles Sign in with Google, if you choose it. Google tells us your email address and confirms it is yours; we receive nothing else from your Google account.</p>
+<p><strong>Twilio</strong> sends the text message with the code that confirms your phone number, if you add one. It receives your number and that code, nothing else.</p>
 <p><strong>Resend</strong> sends our account emails — confirming your address, resetting your password, confirming a change of email. It receives your email address and the text of that message, and nothing about your study activity.</p>
 <p><strong>Expo</strong> delivers push notifications. It receives the push token for your device and the text of the notification itself — which is never more than a friend's display name and a fixed phrase. It is not told who you are.</p>
 <p><strong>RevenueCat</strong> tells us whether your subscription is active. It receives an anonymous identifier for your account and the receipt Apple issues; it does not receive your email address, your name, or any of your study data.</p>

@@ -76,10 +76,46 @@
   // Nothing has been spent yet when this page loads; the token is only used
   // when someone verifies it. That is the whole advantage over the old links,
   // which Supabase consumed before this page ever saw them.
-  if (tokenHash) {
-    if (onPhone) {
+  // Spend the token here and hand the app a session, in the fragment form
+  // every installed build understands. Forwarding the raw token hash instead
+  // only works on builds new enough to call verifyOtp — build 13 opened, did
+  // not recognise the link, and silently did nothing — and a mail cannot know
+  // which build it is about to land on.
+  var verifyThenOpen = function () {
+    show('One moment…', 'Getting Stint ready.');
+    fetch(SUPABASE_URL + '/auth/v1/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON },
+      body: JSON.stringify({ type: type, token_hash: tokenHash })
+    }).then(function (res) {
+      if (!res.ok) { expired(); return null; }
+      return res.json();
+    }).then(function (session) {
+      if (!session) return;
+      if (!session.access_token || !session.refresh_token) {
+        // Verified, but nothing to sign in with — the address is confirmed
+        // either way, so say so rather than open the app empty-handed.
+        show('Email confirmed', 'Open Stint and sign in.');
+        return;
+      }
+      deepLink = 'stint://auth-callback#' + new URLSearchParams({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+        expires_in: String(session.expires_in || ''),
+        token_type: session.token_type || 'bearer',
+        type: type
+      }).toString();
       show('Opening Stint…', 'If nothing happens, tap the button.', true);
       window.location.replace(deepLink);
+    }).catch(function () {
+      show('Could not reach Stint',
+           'Check your connection and open the link again. It has not been used up.');
+    });
+  };
+
+  if (tokenHash) {
+    if (onPhone) {
+      verifyThenOpen();
       return;
     }
     if (type === 'recovery' || type === 'magiclink') {
